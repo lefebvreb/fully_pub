@@ -1,0 +1,18 @@
+[package]
+name = "fully_pub"
+version = "0.1.0"
+authors = ["Benjamin Lefebvre"]
+categories = ["Rust patterns"]
+description = "Macro that makes multiple items or fields public at once"
+documentation = "https://docs.rs/fully_public"
+edition = "2021"
+keywords = ["Attribute", "Macro", "Verbosity", "Visibility"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/L-Benjamin/fully_pub"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1"
+syn = { version = "2", features = ["full"] }

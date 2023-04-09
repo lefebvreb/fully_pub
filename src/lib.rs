@@ -177,15 +177,30 @@ fn make_fully_pub(attr: Option<Ident>, item: &mut Item) -> Result<()> {
 /// Attribute macro that can be applied to any Rust item, and marks
 /// all of its content as [`pub`](https://doc.rust-lang.org/std/keyword.pub.html).
 ///
-/// Call it with the argument `recursive` to make it recursive over the contend of
-/// a nested `mod`s.
+/// Call it with the argument `recursive` to make it recursive over the content of
+/// a nested `mod`: like so `#[fully_pub(recursive)]`.
 ///
-/// Does nothing on `extern crate`, `use` and `mod` declaration statements.
+/// Does nothing on `extern crate`, `use` and `mod` statements.
 ///
 /// You can apply the `#[fully_pub(exclude)]` attribute to any content
 /// of an item to exclude it from being marked as `pub`, if it would have been
 /// otherwise.
-///
+/// 
+/// # Exact Behaviour
+/// 
+/// This macro has the following behaviour depending on the kind of items it is applied on:
+/// 
+/// * `const`, `fn`, `static`, `trait` (and `trait` aliases) and `type` are all simply made `pub`.
+/// Nested items in a `fn` are not affected.
+/// * `macro_rule`, `extern crate`, `mod` statements and `use` are left as-is.
+/// * `extern` modules will see all of their items (`const`, `fn` or `static`) made `pub`.
+/// * `impl` blocks (excluding `impl Trait` blocks) get all their items
+/// (`const`, `fn` or `static`) marked as `pub`
+/// * `mod { /* ... */ }` are marked as `pub`, but their content is left untouched, unless
+/// the `(recursive)` argument is passed to the attribute, in which case all of their items will
+/// be marked `pub` recursively.
+/// * `struct` and `union` get marked `pub` along with all their fields.
+/// 
 /// # Examples
 ///
 /// ```
